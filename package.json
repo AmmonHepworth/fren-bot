@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "dev": "NODE_ENV=development node index.js",
+    "prod": "NODE_ENV=production node index.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "discord.js": "^12.5.1",
+    "dotenv-flow": "^3.2.0"
+  },
+  "name": "fren-counter",
+  "version": "1.0.0",
+  "description": "Fren Counter - Counter of Frens",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {},
+  "author": "GAS",
+  "license": "ISC"
+}
