@@ -9,8 +9,8 @@ const frenCount = require('./responders/fren_count')(client);
 client.login(DISCORD_TOKEN);
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-  const { channelID: newChannel } = oldState;
-  const { channelID: oldChannel, member } = newState;
+  const { channelID: oldChannel } = oldState;
+  const { channelID: newChannel, member } = newState;
 
   if (oldChannel === VOICE_CHANNEL_ID && newChannel !== VOICE_CHANNEL_ID) {
     frenCount.onDisconnect(member);
