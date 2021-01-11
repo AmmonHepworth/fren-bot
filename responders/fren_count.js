@@ -1,6 +1,11 @@
 const telegram = require('../lib/telegram');
 
-const { WAIT_DELAY, GUILD_ID, VOICE_CHANNEL_ID } = process.env;
+const {
+  WAIT_DELAY,
+  GUILD_ID,
+  VOICE_CHANNEL_ID,
+  ALERT_COOLDOWN,
+} = process.env;
 
 class FrenCount {
   /**
@@ -10,6 +15,7 @@ class FrenCount {
   constructor(client) {
     this.client = client;
     this.disconnectTimes = {};
+    this.cooldownForCount = new Set();
   }
 
   /**
@@ -44,6 +50,27 @@ class FrenCount {
   }
 
   /**
+   * Begin cooldown for message events with a given number of members
+   * @param {Number} number The number of members to put on cooldown
+   */
+  putOnCooldown(number) {
+    this.cooldownForCount.add(number);
+
+    setTimeout(() => {
+      this.cooldownForCount.delete(number);
+    }, ALERT_COOLDOWN);
+  }
+
+  /**
+   * Get whether or not a given number of members constitutes a cooldown condition
+   * @param {Number} number The number of members
+   * @return {Boolean} Whether or not that member count is on cooldown
+   */
+  isOnCooldown(number) {
+    return this.cooldownForCount.has(number);
+  }
+
+  /**
    * Public methods
    */
 
@@ -55,9 +82,13 @@ class FrenCount {
     console.log(`joined, there are now ${this.memberCount} members`);
 
     if (this.timeSinceLastJoined(member) < WAIT_DELAY) {
-      console.log(
-        `member ${member.user.username} has left too recently to be counted again`,
-      );
+      console.log(`member ${member.user.username} has left too recently to be counted again`);
+
+      return;
+    }
+
+    if (this.isOnCooldown(this.memberCount)) {
+      console.log(`notified a count of ${this.memberCount} too recently, skipping`);
 
       return;
     }
@@ -74,6 +105,7 @@ class FrenCount {
    */
   onDisconnect({ id }) {
     this.disconnectTimes[id] = Date.now();
+    this.putOnCooldown(this.memberCount + 1);
   }
 }
 
