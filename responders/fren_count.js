@@ -58,6 +58,8 @@ class FrenCount {
       console.log(
         `member ${member.user.username} has left too recently to be counted again`,
       );
+
+      return;
     }
 
     if (this.alertThresholdReached) {
