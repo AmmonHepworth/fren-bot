@@ -13,10 +13,14 @@ client.on('voiceStateUpdate', (oldState, newState) => {
   const { channelID: newChannel, member } = newState;
 
   if (oldChannel === VOICE_CHANNEL_ID && newChannel !== VOICE_CHANNEL_ID) {
+    console.log(`${member.user.username} has disconnected.`);
+
     frenCount.onDisconnect(member);
   }
 
   if (newChannel === VOICE_CHANNEL_ID && oldChannel !== VOICE_CHANNEL_ID) {
+    console.log(`${member.user.username} has connected.`);
+
     frenCount.onJoin(member);
   }
 });
