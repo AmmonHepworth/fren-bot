@@ -46,7 +46,7 @@ class FrenCount {
    * @return {Number} Milliseconds since last join
    */
   timeSinceLastJoined({ id }) {
-    return Date.now() - (this.disconnectTimes[id] || Infinity);
+    return Date.now() - (this.disconnectTimes[id] || -Infinity);
   }
 
   /**
