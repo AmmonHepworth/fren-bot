@@ -1,4 +1,4 @@
-import telegram from '../lib/telegram';
+const telegram = require('../lib/telegram');
 
 const { WAIT_DELAY, GUILD_ID, VOICE_CHANNEL_ID } = process.env;
 
