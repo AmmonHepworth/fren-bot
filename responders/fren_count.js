@@ -74,8 +74,6 @@ class FrenCount {
    */
   onDisconnect({ id }) {
     this.disconnectTimes[id] = Date.now();
-
-    console.log('left');
   }
 }
 
