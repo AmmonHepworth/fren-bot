@@ -94,7 +94,11 @@ class FrenCount {
     }
 
     if (this.alertThresholdReached) {
-      telegram.send(`There are ${this.memberCount} frens in the leb`);
+      if (this.memberCount === 1) {
+        telegram.send("And Saint Attila raised the Telegram message up on high, saying, 'O Lord, bless this thy Telegram message, that with it thou mayst gather thine frens to the Discord, in thy mercy.' And the Lord did grin. And the frens did dote upon the memes, and waifus, and games, and stories, and raccoons, and chicken-nuggies, and Overwatch, and other bad games. And the Lord spake, saying, 'First shalt thou take out the Telegram token. Then the friend count shall be one, no more, no less. One shall be the number of the frens, and the number of the frens shall be one. Two shalt thou not count, neither count thou zero, excepting that thou then proceed to proclaim one. Three is right out. Once the number one, being the first number of frens, be reached, then lobbest thou telegram Notification of Antioch towards thy frens, who, being wholesome in My sight, shall join in.");
+      } else {
+        telegram.send(`There are ${this.memberCount} frens in the leb`);
+      }
     }
   }
 
