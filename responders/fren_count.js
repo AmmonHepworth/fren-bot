@@ -5,6 +5,7 @@ const {
   GUILD_ID,
   VOICE_CHANNEL_ID,
   ALERT_COOLDOWN,
+  SCREAM_ALLOWANCE,
 } = process.env;
 
 class FrenCount {
@@ -103,9 +104,16 @@ class FrenCount {
    * @param {Object} member The GuildMember object returned from Discord.js
    * @param {String} member.id The snowflake id of the member
    */
-  onDisconnect({ id }) {
-    this.disconnectTimes[id] = Date.now();
-    this.putOnCooldown(this.memberCount + 1);
+  onDisconnect(member) {
+    this.disconnectTimes[member.id] = Date.now();
+
+    const justScreamed = (
+      this.timeSinceLastJoined(member) < SCREAM_ALLOWANCE && this.memberCount === 0
+    );
+
+    if (!justScreamed) {
+      this.putOnCooldown(this.memberCount + 1);
+    }
   }
 }
 
