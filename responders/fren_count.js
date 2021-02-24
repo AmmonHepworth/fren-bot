@@ -63,6 +63,16 @@ class FrenCount {
   }
 
   /**
+   * Take all numbers above given number off of cooldown
+   * @param {Number} number The lower bound above which all will be anihilated
+   */
+  cooldownAbove(number) {
+    this.cooldownForCount = new Set(
+      [...this.cooldownForCount].filter((n) => n < number),
+    );
+  }
+
+  /**
    * Get whether or not a given number of members constitutes a cooldown condition
    * @param {Number} number The number of members
    * @return {Boolean} Whether or not that member count is on cooldown
@@ -96,6 +106,7 @@ class FrenCount {
 
     if (this.alertThresholdReached) {
       telegram.send(`There are ${this.memberCount} frens in the leb`);
+      this.cooldownAbove(this.memberCount);
     }
   }
 
