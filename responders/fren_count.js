@@ -37,7 +37,7 @@ class FrenCount {
    * @return {Boolean}
    */
   get alertThresholdReached() {
-    return Math.log2(this.memberCount) % 1 === 0;
+    return (Math.log2(this.memberCount) % 1 === 0) || (this.memberCount == 12);
   }
 
   /**
