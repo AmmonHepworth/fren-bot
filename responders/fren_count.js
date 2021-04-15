@@ -16,7 +16,7 @@ class FrenCount {
   constructor(client) {
     this.client = client;
     this.disconnectTimes = {};
-    this.cooldownForCount = new Set();
+    this.cooldownForCount = new Map();
   }
 
   /**
@@ -55,11 +55,28 @@ class FrenCount {
    * @param {Number} number The number of members to put on cooldown
    */
   putOnCooldown(number) {
-    this.cooldownForCount.add(number);
+    this.cooldownForCount.set(
+      number,
+      setTimeout(() => this.cooldownForCount.delete(number), ALERT_COOLDOWN),
+    );
+  }
 
-    setTimeout(() => {
-      this.cooldownForCount.delete(number);
-    }, ALERT_COOLDOWN);
+  /**
+   * Take all numbers above given number off of cooldown
+   * @param {Number} number The lower bound above which all will be anihilated
+   */
+  cooldownAbove(number) {
+    this.cooldownForCount = new Map(
+      [...this.cooldownForCount].filter(([n, timeId]) => {
+        if (n < number) {
+          clearTimeout(timeId);
+
+          return false;
+        }
+
+        return true;
+      }),
+    );
   }
 
   /**
@@ -96,6 +113,7 @@ class FrenCount {
 
     if (this.alertThresholdReached) {
       telegram.send(`There are ${this.memberCount} frens in the leb`);
+      this.cooldownAbove(this.memberCount);
     }
   }
 
