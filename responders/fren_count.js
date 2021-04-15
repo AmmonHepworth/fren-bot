@@ -123,8 +123,6 @@ class FrenCount {
    * @param {String} member.id The snowflake id of the member
    */
   onDisconnect(member) {
-    this.disconnectTimes[member.id] = Date.now();
-
     const justScreamed = (
       this.timeSinceLastJoined(member) < SCREAM_ALLOWANCE && this.memberCount === 0
     );
@@ -132,6 +130,8 @@ class FrenCount {
     if (!justScreamed) {
       this.putOnCooldown(this.memberCount + 1);
     }
+
+    this.disconnectTimes[member.id] = Date.now();
   }
 }
 
