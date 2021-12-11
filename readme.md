@@ -20,7 +20,11 @@ The appropriate configuration will be used when running the server.
 
 ### Docker
 
-To run fren-bot in docker, clone this repository and run the following commands:
+To run fren-bot in docker:
+
+- clone this repo
+- add your tokens to .env.production.local
+- run the following commands:
 
 ```
 docker-compose build
