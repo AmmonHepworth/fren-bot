@@ -2,3 +2,4 @@ version: "3.9"
 services:
   fren-bot:
     build: .
+    restart: unless-stopped
