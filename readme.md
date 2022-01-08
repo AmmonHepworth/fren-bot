@@ -18,6 +18,19 @@ The default configuration for this project is stored in `.env.development` and `
 
 The appropriate configuration will be used when running the server.
 
+### Docker
+
+To run fren-bot in docker:
+
+- clone this repo
+- add your tokens to .env.production.local
+- run the following commands:
+
+```
+docker-compose build
+docker-compose up
+```
+
 ### Linting
 
 This project inherits from Airbnb's lint rules. You may customize the lint rules by modifying `.eslintrc.js`. If you disable a rule, consider leaving a comment rationalizing why you removed it from the project.
