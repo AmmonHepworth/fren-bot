@@ -1,26 +1,50 @@
 require('dotenv-flow').config();
-const Discord = require('discord.js');
 
-const { VOICE_CHANNEL_ID, DISCORD_TOKEN } = process.env;
+const { GAS_CHAT, GAS_GAMER_CHAT } = process.env;
 
-const client = new Discord.Client();
-const frenCount = require('./responders/fren_count')(client);
+const telegram = require('./lib/senders/telegram');
 
-client.login(DISCORD_TOKEN);
+const DiscordListener = require('./lib/listeners/discord.js');
+const MinecraftListener = require('./lib/listeners/minecraft.js');
+const FrenCountResponder = require('./lib/responders/fren_count.js');
 
-client.on('voiceStateUpdate', (oldState, newState) => {
-  const { channelID: oldChannel } = oldState;
-  const { channelID: newChannel, member } = newState;
+const discordResponder = new FrenCountResponder((frenCount) => {
+  const plural = frenCount > 1;
+  const msg = `There ${plural ? 'are' : 'is'} ${frenCount} fren${plural ? 's' : ''} in the leb.`;
 
-  if (oldChannel === VOICE_CHANNEL_ID && newChannel !== VOICE_CHANNEL_ID) {
-    console.log(`${member.user.username} has disconnected.`);
+  telegram.send(msg, GAS_CHAT);
+});
 
-    frenCount.onDisconnect(member);
-  }
+const minecraftResponder = new FrenCountResponder((frenCount) => {
+  const plural = frenCount > 1;
+  const msg = `There ${plural ? 'are' : 'is'} ${frenCount} fren${plural ? 's' : ''} on the frencraft server.`;
 
-  if (newChannel === VOICE_CHANNEL_ID && oldChannel !== VOICE_CHANNEL_ID) {
-    console.log(`${member.user.username} has connected.`);
+  telegram.send(msg, GAS_GAMER_CHAT);
+});
 
-    frenCount.onJoin(member);
-  }
+const discord = new DiscordListener();
+const minecraft = new MinecraftListener();
+
+discord.onJoin((user) => {
+  console.log(`${user} has connected to Discord.`);
+
+  discordResponder.onJoin(user, discord.memberCount);
+});
+
+discord.onLeave((user) => {
+  console.log(`${user} has disconnected from Discord.`);
+
+  discordResponder.onLeave(user, discord.memberCount);
+});
+
+minecraft.onJoin((user) => {
+  console.log(`${user} has connected to Frencraft.`);
+
+  minecraftResponder.onJoin(user, minecraft.playerCount);
+});
+
+minecraft.onLeave((user) => {
+  console.log(`${user} has disconnected from Frencraft.`);
+
+  minecraftResponder.onLeave(user, minecraft.playerCount);
 });
