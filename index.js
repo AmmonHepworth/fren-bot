@@ -1,26 +1,39 @@
 require('dotenv-flow').config();
-const Discord = require('discord.js');
 
-const { VOICE_CHANNEL_ID, DISCORD_TOKEN } = process.env;
+const { GAS_CHAT, GAS_GAMER_CHAT } = process.env;
 
-const client = new Discord.Client();
-const frenCount = require('./responders/fren_count')(client);
+const telegram = require('./lib/senders/telegram');
 
-client.login(DISCORD_TOKEN);
+const DiscordListener = require('./lib/listeners/discord.js');
+const MinecraftListener = require('./lib/listeners/minecraft.js');
+const FrenCountResponder = require('./lib/responders/fren_count.js');
 
-client.on('voiceStateUpdate', (oldState, newState) => {
-  const { channelID: oldChannel } = oldState;
-  const { channelID: newChannel, member } = newState;
+const gasFrensResponder = new FrenCountResponder((msg) => telegram.send(msg, GAS_CHAT));
+const gasGamerResponder = new FrenCountResponder((msg) => telegram.send(msg, GAS_GAMER_CHAT));
 
-  if (oldChannel === VOICE_CHANNEL_ID && newChannel !== VOICE_CHANNEL_ID) {
-    console.log(`${member.user.username} has disconnected.`);
+const discord = new DiscordListener();
+const minecraft = new MinecraftListener();
 
-    frenCount.onDisconnect(member);
-  }
+discord.onJoin((user) => {
+  console.log(`${user} has connected to Discord.`);
 
-  if (newChannel === VOICE_CHANNEL_ID && oldChannel !== VOICE_CHANNEL_ID) {
-    console.log(`${member.user.username} has connected.`);
+  gasFrensResponder.onJoin(user, discord.memberCount);
+});
 
-    frenCount.onJoin(member);
-  }
+discord.onLeave((user) => {
+  console.log(`${user} has disconnected from Discord.`);
+
+  gasFrensResponder.onLeave(user, discord.memberCount);
+});
+
+minecraft.onJoin((user) => {
+  console.log(`${user} has connected to Frencraft.`);
+
+  gasGamerResponder.onJoin(user, minecraft.playerCount);
+});
+
+minecraft.onLeave((user) => {
+  console.log(`${user} has disconnected from Frencraft.`);
+
+  gasGamerResponder.onLeave(user, minecraft.playerCount);
 });
