@@ -8,8 +8,19 @@ const DiscordListener = require('./lib/listeners/discord.js');
 const MinecraftListener = require('./lib/listeners/minecraft.js');
 const FrenCountResponder = require('./lib/responders/fren_count.js');
 
-const gasFrensResponder = new FrenCountResponder((msg) => telegram.send(msg, GAS_CHAT));
-const gasGamerResponder = new FrenCountResponder((msg) => telegram.send(msg, GAS_GAMER_CHAT));
+const gasFrensResponder = new FrenCountResponder((frenCount) => {
+  const plural = frenCount > 1;
+  const msg = `There ${plural ? 'are' : 'is'} ${frenCount} fren${plural ? 's' : ''} in the leb.`;
+
+  telegram.send(msg, GAS_CHAT);
+});
+
+const gasGamerResponder = new FrenCountResponder((frenCount) => {
+  const plural = frenCount > 1;
+  const msg = `There ${plural ? 'are' : 'is'} ${frenCount} fren${plural ? 's' : ''} on the frencraft server.`;
+
+  telegram.send(msg, GAS_GAMER_CHAT);
+});
 
 const discord = new DiscordListener();
 const minecraft = new MinecraftListener();
