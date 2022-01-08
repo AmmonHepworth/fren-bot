@@ -1,6 +1,6 @@
 # GAS Chat Fren Bot
 
-![Linter](https://github.com/kylehovey/fren-bot/workflows/Node.js%20CI/badge.svg)
+[![Linter](https://github.com/AmmonHepworth/fren-bot/actions/workflows/lint.yml/badge.svg)](https://github.com/AmmonHepworth/fren-bot/actions/workflows/lint.yml)
 
 This is the back-end for the GAS chat Telegram/Discord bot.
 
