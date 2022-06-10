@@ -10,7 +10,7 @@ This is the back-end for the GAS chat Telegram/Discord bot.
 
 Clone down this project and `cd` into the directory. If you are using the [asdf version manager](https://asdf-vm.com/#/) with the `asdf-nodejs` plugin, just run `asdf install` to ensure you have the right version of `node`. Then, just run `npm i` to install dependencies.
 
-To run the project, run `npm run dev` to start the project in a development environment and `npm run prod` to start the project in a production environment.
+To run the project, run `npm run dev` to start the project in a development environment and `npm run prod` to start the project in a production environment. Alternatively, you can run `npm run prodmon` to use `nodemon` in order to auto-restart the server on crash, or if files are changed while the server is live. All server state is stored in memory, so restarts will reset all cooldowns.
 
 ### Configuration
 
