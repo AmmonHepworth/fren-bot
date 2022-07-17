@@ -6,8 +6,10 @@ const {
   SM_MC_CHANNEL,
   FRENCRAFT_CREATE_HOST,
   FRENCRAFT_HOST,
+  FRENCRAFT_PORT,
   MC_POLL_INTERVAL,
   MC_CREATE_POLL_INTERVAL,
+  FRENCRAFT_CREATE_PORT,
 } = process.env;
 
 const telegram = require('./lib/senders/telegram');
@@ -47,10 +49,15 @@ const minecraftCreateResponder = new FrenCountResponder((frenCount) => {
 });
 
 const discord = new DiscordListener();
-const minecraft = new MinecraftListener(FRENCRAFT_HOST, MC_POLL_INTERVAL);
+const minecraft = new MinecraftListener(
+  FRENCRAFT_HOST,
+  MC_POLL_INTERVAL,
+  Number.parseInt(FRENCRAFT_PORT, 10)
+);
 const minecraftCreate = new MinecraftListener(
   FRENCRAFT_CREATE_HOST,
-  MC_CREATE_POLL_INTERVAL
+  MC_CREATE_POLL_INTERVAL,
+  Number.parseInt(FRENCRAFT_CREATE_PORT, 10)
 );
 
 discord.onJoin((user) => {
