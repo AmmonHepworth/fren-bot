@@ -3,7 +3,8 @@
     "dev": "NODE_ENV=development node index.js",
     "prod": "NODE_ENV=production node index.js",
     "prodmon": "NODE_ENV=production ./node_modules/.bin/nodemon index.js",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "prettier": "npx prettier --write ."
   },
   "dependencies": {
     "@slack/web-api": "^6.5.1",
@@ -21,9 +22,12 @@
     "lib": "lib"
   },
   "devDependencies": {
-    "eslint": "^7.17.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1"
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1"
   },
   "author": "GAS",
   "license": "ISC"
