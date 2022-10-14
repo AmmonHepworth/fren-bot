@@ -1,6 +1,16 @@
 require('dotenv-flow').config();
 
-const { GAS_CHAT, GAS_GAMER_CHAT, SM_MC_CHANNEL } = process.env;
+const {
+  GAS_CHAT,
+  GAS_GAMER_CHAT,
+  SM_MC_CHANNEL,
+  FRENCRAFT_CREATE_HOST,
+  FRENCRAFT_HOST,
+  FRENCRAFT_PORT,
+  MC_POLL_INTERVAL,
+  MC_CREATE_POLL_INTERVAL,
+  FRENCRAFT_CREATE_PORT,
+} = process.env;
 
 const telegram = require('./lib/senders/telegram');
 const slack = require('./lib/senders/slack');
@@ -28,8 +38,27 @@ const minecraftResponder = new FrenCountResponder((frenCount) => {
   slack.send(msg, SM_MC_CHANNEL);
 });
 
+const minecraftCreateResponder = new FrenCountResponder((frenCount) => {
+  const plural = frenCount > 1;
+  const msg = `There ${plural ? 'are' : 'is'} ${frenCount} fren${
+    plural ? 's' : ''
+  } on the create server.`;
+
+  telegram.send(msg, GAS_GAMER_CHAT);
+  slack.send(msg, SM_MC_CHANNEL);
+});
+
 const discord = new DiscordListener();
-const minecraft = new MinecraftListener();
+const minecraft = new MinecraftListener(
+  FRENCRAFT_HOST,
+  MC_POLL_INTERVAL,
+  Number.parseInt(FRENCRAFT_PORT, 10)
+);
+const minecraftCreate = new MinecraftListener(
+  FRENCRAFT_CREATE_HOST,
+  MC_CREATE_POLL_INTERVAL,
+  Number.parseInt(FRENCRAFT_CREATE_PORT, 10)
+);
 
 discord.onJoin((user) => {
   console.log(`${user} has connected to Discord.`);
@@ -53,4 +82,16 @@ minecraft.onLeave((user) => {
   console.log(`${user} has disconnected from Frencraft.`);
 
   minecraftResponder.onLeave(user, minecraft.playerCount);
+});
+
+minecraftCreate.onJoin((user) => {
+  console.log(`${user} has connected to the Create server.`);
+
+  minecraftCreateResponder.onJoin(user, minecraftCreate.playerCount);
+});
+
+minecraftCreate.onLeave((user) => {
+  console.log(`${user} has disconnected from the Create server.`);
+
+  minecraftCreateResponder.onLeave(user, minecraftCreate.playerCount);
 });
