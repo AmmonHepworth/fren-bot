@@ -1,5 +1,5 @@
 const {
-  DISCORD_RESPONDER_ENABLED,
+  PRODUCTIVITY_RESPONDER_ENABLED,
   GAS_CHAT,
   GUILD_ID,
   PRODUCTIVITY_CHANNEL_ID,
@@ -10,7 +10,7 @@ const telegram = require('../lib/senders/telegram');
 const FrenCountResponder = require('../lib/responders/fren_count');
 const DiscordListener = require('../lib/listeners/discord');
 
-if (DISCORD_RESPONDER_ENABLED === 'true') {
+if (PRODUCTIVITY_RESPONDER_ENABLED === 'true') {
   const productivityResponder = new FrenCountResponder((frenCount) => {
     const plural = frenCount > 1;
     const msg = `${frenCount} fren${plural ? 's' : ''} ${
