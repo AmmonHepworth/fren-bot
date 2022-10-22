@@ -4,5 +4,5 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm install .
-CMD npm run prod
+RUN npm ci --only=production
+CMD [ "npm", "run", "prod" ]
