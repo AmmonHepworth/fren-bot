@@ -1,4 +1,5 @@
-const { DISCORD_RESPONDER_ENABLED, GAS_CHAT } = process.env;
+const { DISCORD_RESPONDER_ENABLED, GAS_CHAT, GUILD_ID, VOICE_CHANNEL_ID } =
+  process.env;
 
 const telegram = require('../lib/senders/telegram');
 
@@ -15,17 +16,21 @@ if (DISCORD_RESPONDER_ENABLED === 'true') {
     telegram.send(msg, GAS_CHAT);
   });
 
-  const discord = new DiscordListener();
+  const discord = new DiscordListener(GUILD_ID, VOICE_CHANNEL_ID);
 
-  discord.onJoin((user) => {
+  discord.onJoin(async (user) => {
     console.log(`${user} has connected to Discord.`);
 
-    discordResponder.onJoin(user, discord.memberCount);
+    const memberCount = await discord.memberCount();
+
+    discordResponder.onJoin(user, memberCount);
   });
 
-  discord.onLeave((user) => {
+  discord.onLeave(async (user) => {
     console.log(`${user} has disconnected from Discord.`);
 
-    discordResponder.onLeave(user, discord.memberCount);
+    const memberCount = await discord.memberCount();
+
+    discordResponder.onLeave(user, memberCount);
   });
 }
