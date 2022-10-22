@@ -10,6 +10,9 @@ const {
   MC_POLL_INTERVAL,
   MC_CREATE_POLL_INTERVAL,
   FRENCRAFT_CREATE_PORT,
+  GUILD_ID,
+  VOICE_CHANNEL_ID,
+  PRODUCTIVITY_CHANNEL_ID,
 } = process.env;
 
 const telegram = require('./lib/senders/telegram');
@@ -24,6 +27,15 @@ const discordResponder = new FrenCountResponder((frenCount) => {
   const msg = `There ${plural ? 'are' : 'is'} ${frenCount} fren${
     plural ? 's' : ''
   } in the leb.`;
+
+  telegram.send(msg, GAS_CHAT);
+});
+
+const productivityResponder = new FrenCountResponder((frenCount) => {
+  const plural = frenCount > 1;
+  const msg = `${frenCount} fren${
+    plural ? 's' : ''
+  } ${plural ? 'are' : 'is'} being productive 😌.`;
 
   telegram.send(msg, GAS_CHAT);
 });
@@ -48,7 +60,9 @@ const minecraftCreateResponder = new FrenCountResponder((frenCount) => {
   slack.send(msg, SM_MC_CHANNEL);
 });
 
-const discord = new DiscordListener();
+const discordVoice = new DiscordListener(GUILD_ID, VOICE_CHANNEL_ID);
+const discordProductivity = new DiscordListener(GUILD_ID, PRODUCTIVITY_CHANNEL_ID);
+
 const minecraft = new MinecraftListener(
   FRENCRAFT_HOST,
   MC_POLL_INTERVAL,
@@ -60,16 +74,28 @@ const minecraftCreate = new MinecraftListener(
   Number.parseInt(FRENCRAFT_CREATE_PORT, 10)
 );
 
-discord.onJoin((user) => {
+discordVoice.onJoin((user) => {
   console.log(`${user} has connected to Discord.`);
 
-  discordResponder.onJoin(user, discord.memberCount);
+  discordResponder.onJoin(user, discordVoice.memberCount);
 });
 
-discord.onLeave((user) => {
+discordVoice.onLeave((user) => {
   console.log(`${user} has disconnected from Discord.`);
 
-  discordResponder.onLeave(user, discord.memberCount);
+  discordResponder.onLeave(user, discordVoice.memberCount);
+});
+
+discordProductivity.onJoin((user) => {
+  console.log(`${user} has connected to Discord.`);
+
+  productivityResponder.onJoin(user, discordProductivity.memberCount);
+});
+
+discordProductivity.onLeave((user) => {
+  console.log(`${user} has disconnected from Discord.`);
+
+  productivityResponder.onLeave(user, discordProductivity.memberCount);
 });
 
 minecraft.onJoin((user) => {
