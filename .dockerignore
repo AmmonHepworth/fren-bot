@@ -3,3 +3,6 @@ npm-debug.log
 .env.local
 .env.production.local
 .env.development.local
+.env.test.local
+yarn-debug.log*
+yarn-error.log*
