@@ -4,3 +4,5 @@ services:
     container_name: fren-bot
     build: .
     restart: unless-stopped
+    volumes:
+      - ./.env.production.local:/usr/src/app/.env.production.local
