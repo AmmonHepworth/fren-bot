@@ -9,7 +9,7 @@ const FrenCountResponder = require('../lib/responders/fren_count');
 if (DISCORD_RESPONDER_ENABLED === 'true') {
   const discordResponder = new FrenCountResponder((frenCount) => {
     const plural = frenCount > 1;
-    const msg = `There ${plural ? 'are' : 'is'} ${frenCount} fren${
+    const msg = `There ${plural ? 'are' : 'is'} ${frenCount} kitten${
       plural ? 's' : ''
     } in the leb.`;
 
