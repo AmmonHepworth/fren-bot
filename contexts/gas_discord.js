@@ -1,5 +1,9 @@
-const { DISCORD_RESPONDER_ENABLED, GAS_CHAT, GUILD_ID, VOICE_CHANNEL_ID } =
-  process.env;
+const {
+  DISCORD_RESPONDER_ENABLED,
+  GAS_GAMER_CHAT,
+  GUILD_ID,
+  VOICE_CHANNEL_ID,
+} = process.env;
 
 const telegram = require('../lib/senders/telegram');
 
@@ -13,7 +17,7 @@ if (DISCORD_RESPONDER_ENABLED === 'true') {
       plural ? 's' : ''
     } in the leb.`;
 
-    telegram.send(msg, GAS_CHAT);
+    telegram.send(msg, GAS_GAMER_CHAT);
   });
 
   const discord = new DiscordListener(GUILD_ID, VOICE_CHANNEL_ID);

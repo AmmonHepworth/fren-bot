@@ -1,6 +1,6 @@
 const {
   PRODUCTIVITY_RESPONDER_ENABLED,
-  GAS_CHAT,
+  GAS_GAMER_CHAT,
   GUILD_ID,
   PRODUCTIVITY_CHANNEL_ID,
 } = process.env;
@@ -17,7 +17,7 @@ if (PRODUCTIVITY_RESPONDER_ENABLED === 'true') {
       plural ? 'are' : 'is'
     } being productive 😌.`;
 
-    telegram.send(msg, GAS_CHAT);
+    telegram.send(msg, GAS_GAMER_CHAT);
   });
 
   const discordProductivity = new DiscordListener(
